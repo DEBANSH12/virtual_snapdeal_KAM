@@ -4,7 +4,7 @@ A voice-first AI Key Account Manager for marketplace sellers, built as a prototy
 
 The seller speaks, the assistant listens, checks the seller's account through tool calls, asks follow-up questions, recommends actions, and closes the call with a summary and a follow-up date.
 
-**Live demo:** `ADD YOUR VERCEL LINK HERE`
+**Live demo:** https://virtual-kam.vercel.app/
 
 > Prototype on mock data. It is not connected to any Snapdeal system and is not an official Snapdeal product.
 
