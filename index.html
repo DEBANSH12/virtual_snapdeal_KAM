@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Virtual KAM · Voice prototype</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <span class="logo-dot" aria-hidden="true"></span>
+    <div>
+      <h1>Virtual KAM</h1>
+      <p>Voice assistant for Snapdeal sellers · assignment prototype · mock data only</p>
+    </div>
+  </div>
+  <div class="top-right">
+    <div class="view-switch" role="group" aria-label="Choose view">
+      <button id="viewSeller" type="button" aria-pressed="false" title="Only the call, as the seller experiences it">Seller view</button>
+      <button id="viewAgent" type="button" aria-pressed="true" title="The call plus what the agent sees and does">Agent view</button>
+    </div>
+    <span id="brainBadge" class="badge" title="Which brain is answering">…</span>
+    <button id="settingsBtn" class="ghost" type="button">Settings</button>
+  </div>
+</header>
+
+<div id="banner" class="banner" hidden></div>
+
+<main class="layout">
+  <!-- ============ LEFT: the call ============ -->
+  <section class="call card" aria-label="Voice call">
+    <div class="call-head">
+      <div class="who">
+        <div class="avatar" aria-hidden="true">P</div>
+        <div><strong>Priya</strong><span>Virtual Key Account Manager</span></div>
+      </div>
+      <div class="who right">
+        <div><strong>Rajesh Kumar</strong><span>Rajesh Home &amp; Kitchen</span></div>
+      </div>
+    </div>
+
+    <div id="alertStrip" class="alert-strip" hidden></div>
+
+    <div class="stage">
+      <button id="orb" class="orb idle" type="button" aria-label="Start call">
+        <span class="ring r1"></span><span class="ring r2"></span>
+        <span class="orb-core"><span id="orbIcon">📞</span></span>
+      </button>
+      <div id="phase" class="phase">Ready</div>
+      <div id="timer" class="timer">00:00</div>
+      <div id="caption" class="caption" aria-live="polite">Press <b>Seller calls KAM</b>, then speak as the seller. Try: “My sales have dropped significantly this month. I don’t understand why. Can you help me?”</div>
+    </div>
+
+    <div class="controls">
+      <button id="callBtn" class="primary" type="button">Seller calls KAM</button>
+      <button id="outBtn" class="ghost" type="button" title="The KAM starts the call because an alert fired">KAM calls seller</button>
+      <button id="reportBtn" class="ghost" type="button" hidden>Download call report</button>
+      <label class="select">Language
+        <select id="langSel"><option value="en">English</option><option value="hi">हिंदी (Hindi)</option></select>
+      </label>
+      <span id="hint" class="hint">🎧 Headphones give the cleanest interruptions</span>
+    </div>
+
+    <div class="transcript-wrap">
+      <div class="section-title">Call transcript <span class="muted">(secondary to voice)</span></div>
+      <div id="transcript" class="transcript"></div>
+      <details class="debug">
+        <summary>Type instead (debug only)</summary>
+        <form id="typeForm"><input id="typeInput" autocomplete="off" placeholder="Type what the seller says…"><button class="ghost" type="submit">Send</button></form>
+      </details>
+    </div>
+  </section>
+
+  <!-- ============ RIGHT: what the agent sees and does ============ -->
+  <aside class="side">
+    <section class="card">
+      <div class="section-title">Seller account <span class="muted">this month vs last</span></div>
+      <table class="metrics" id="metrics"></table>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Diagnosis <span class="muted">fills in as the agent checks</span></div>
+      <ul id="diagnosis" class="diag"></ul>
+      <div id="bridge" class="bridge" hidden></div>
+      <div id="sellerSaid" class="said" hidden></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Stock practices <span class="muted">day-to-day fixes the agent checks</span></div>
+      <ul id="practices" class="diag"></ul>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Action tracker <span id="actionCount" class="pill muted-pill">waiting</span></div>
+      <div id="actions" class="empty">The agreed plan appears here.</div>
+      <div id="followup" class="followup" hidden></div>
+    </section>
+
+    <section class="card">
+      <div class="section-title">Call quality <span class="muted">measured live</span></div>
+      <div id="stats" class="stats"></div>
+    </section>
+
+    <section class="card" id="waCard" hidden>
+      <div class="section-title">WhatsApp summary <span class="muted">simulated</span></div>
+      <div id="wa" class="wa"></div>
+    </section>
+  </aside>
+</main>
+
+<footer class="foot">Prototype for the Snapdeal AI First Intern assignment. Uses invented data. Not connected to any Snapdeal system and not an official Snapdeal product.</footer>
+
+<!-- Settings -->
+<dialog id="settings">
+  <form method="dialog" class="settings">
+    <h2>Settings</h2>
+    <label id="keyRow">Gemini API key <span class="muted">(from Google AI Studio; stays in this browser tab)</span>
+      <input id="keyInput" type="password" placeholder="Paste key to switch on the AI brain" autocomplete="off">
+    </label>
+    <label>Model
+      <select id="modelSel"></select>
+    </label>
+    <label>English voice <select id="voiceEn"></select></label>
+    <label>Hindi voice <select id="voiceHi"></select></label>
+    <label class="check"><input id="bargeChk" type="checkbox" checked> Let the seller interrupt by speaking (barge-in)</label>
+    <p id="keyHelp" class="muted small">Without a key the app runs a scripted backup flow so the voice loop can still be tested. With a key, Gemini drives the conversation through tool calls.</p>
+    <div class="row"><button id="testVoice" class="ghost" type="button">Test voice</button><button class="primary" value="ok">Done</button></div>
+  </form>
+</dialog>
+
+<script src="js/data.js"></script>
+<script src="js/tools.js"></script>
+<script src="js/prompt.js"></script>
+<script src="js/speech.js"></script>
+<script src="js/guard.js"></script>
+<script src="js/brain.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
